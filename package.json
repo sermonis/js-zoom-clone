@@ -1,0 +1,22 @@
+{
+  "name": "zoom-clone",
+  "version": "1.0.0",
+  "description": "practice webRTC, socket with zoom clone",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sagongjieun/zoom-clone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sagongjieun/zoom-clone/issues"
+  },
+  "homepage": "https://github.com/sagongjieun/zoom-clone#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/node": "^7.20.7",
+    "nodemon": "^2.0.20"
+  }
+}
