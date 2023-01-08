@@ -17,18 +17,17 @@ const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const server = http.createServer(app); // express.js로 http 서버 생성
 const wss = new WebSocket.Server({ server }); // http 서버 위에 ws 서버 생성
 
-/**
- *
- * @param socket = 연결된 브라우저
- */
+const sockets = []; // 연결될 여러 브라우저를 넣을 배열
+
+// socket = 연결된 브라우저
 wss.on("connection", (socket) => {
+  sockets.push(socket);
   console.log("Connected to Browser ✅");
 
   socket.on("close", () => console.log("Disconnected from the Browser ❎"));
   socket.on("message", (message) => {
-    console.log(message.toString("utf8"));
+    sockets.forEach((aSocket) => aSocket.send(message));
   });
-  socket.send("hello!");
 });
 
 server.listen(3000, handleListen);
