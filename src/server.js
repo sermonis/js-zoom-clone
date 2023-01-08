@@ -1,6 +1,7 @@
 import http from "http";
 import WebSocket from "ws";
 import express from "express";
+import e from "express";
 
 const app = express();
 
@@ -22,11 +23,21 @@ const sockets = []; // 연결될 여러 브라우저를 넣을 배열
 // socket = 연결된 브라우저
 wss.on("connection", (socket) => {
   sockets.push(socket);
+  socket["nickname"] = "익명";
   console.log("Connected to Browser ✅");
 
   socket.on("close", () => console.log("Disconnected from the Browser ❎"));
-  socket.on("message", (message) => {
-    sockets.forEach((aSocket) => aSocket.send(message));
+  socket.on("message", (data) => {
+    const message = JSON.parse(data);
+
+    switch (message.type) {
+      case "new_message":
+        sockets.forEach((aSocket) => aSocket.send(`${socket.nickname}: ${message.payload}`));
+        break;
+      case "nickname":
+        socket["nickname"] = message.payload;
+        break;
+    }
   });
 });
 
