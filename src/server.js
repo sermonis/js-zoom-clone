@@ -1,7 +1,6 @@
 import http from "http";
-import WebSocket from "ws";
+import SocketIO from "socket.io";
 import express from "express";
-import e from "express";
 
 const app = express();
 
@@ -15,10 +14,18 @@ app.get("/*", (req, res) => res.redirect("/"));
 const handleListen = () => console.log(`Listening on http://localhost:3000`);
 
 // http, ws 서버 둘다 돌리기 가능
-const server = http.createServer(app); // express.js로 http 서버 생성
-const wss = new WebSocket.Server({ server }); // http 서버 위에 ws 서버 생성
+const httpServer = http.createServer(app); // express.js로 http 서버 생성
+// const wss = new WebSocket.Server({ server }); // http 서버 위에 ws 서버 생성
+const wsServer = SocketIO(httpServer);
 
-const sockets = []; // 연결될 여러 브라우저를 넣을 배열
+wsServer.on("connection", (socket) => {
+  console.log(socket);
+});
+
+/**
+ * WebSocket으로 채팅 구현
+ * 
+ * const sockets = []; // 연결될 여러 브라우저를 넣을 배열
 
 // socket = 연결된 브라우저
 wss.on("connection", (socket) => {
@@ -40,5 +47,6 @@ wss.on("connection", (socket) => {
     }
   });
 });
+ */
 
-server.listen(3000, handleListen);
+httpServer.listen(3000, handleListen);
