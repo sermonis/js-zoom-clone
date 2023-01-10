@@ -19,7 +19,9 @@ const httpServer = http.createServer(app); // express.js로 http 서버 생성
 const wsServer = SocketIO(httpServer);
 
 wsServer.on("connection", (socket) => {
-  console.log(socket);
+  socket.on("enter_room", (msg, done) => {
+    console.log(msg);
+  });
 });
 
 /**
