@@ -19,25 +19,27 @@ const httpServer = http.createServer(app); // express.js로 http 서버 생성
 const wsServer = SocketIO(httpServer);
 
 wsServer.on("connection", (socket) => {
+  socket["nickname"] = "익명";
   socket.onAny((event) => {
     console.log(`Socket Event : ${event}`);
   });
   socket.on("enter_room", (roomName, done) => {
     socket.join(roomName); // 방에 참가
     done(); // client에서 실행시킨 콜백함수를 호출
-    socket.to(roomName).emit("welcome"); // 나를 제외한 모두에게 메시지보내기
+    socket.to(roomName).emit("welcome", socket.nickname); // 나를 제외한 모두에게 메시지보내기
   });
   // disconnecting = 연결을 끊을 것이지만 완전히 방을 나가지는 않은 상태
   // disconnect = 연결이 완전히 끊어짐
   socket.on("disconnecting", () => {
     socket.rooms.forEach((room) => {
-      socket.to(room).emit("bye");
+      socket.to(room).emit("bye", socket.nickname);
     });
   });
   socket.on("new_message", (msg, room, done) => {
-    socket.to(room).emit("new_message", msg);
+    socket.to(room).emit("new_message", `${socket.nickname}: ${msg}`);
     done();
   });
+  socket.on("nickname", (nickname) => (socket["nickname"] = nickname));
 });
 
 /**
